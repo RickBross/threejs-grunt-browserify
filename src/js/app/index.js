@@ -1,4 +1,12 @@
 var THREE = require('three');
+var Stats = require('stats.js');
+var stats = new Stats();
+
+stats.setMode(0); // 0: fps, 1: ms
+document.body.appendChild( stats.domElement );
+stats.domElement.style.left = '0px';
+stats.domElement.style.top = '0px';
+stats.domElement.style.position = 'absolute';
 
 var renderer = new THREE.WebGLRenderer();
 
@@ -23,10 +31,16 @@ var mesh	= new THREE.Mesh( geometry, material );
 scene.add( mesh );
 
 (function animate(){
-	requestAnimationFrame( animate );
 
-	mesh.rotation.x += 0.005;
-	mesh.rotation.y += 0.01;
 
-	renderer.render( scene, camera );
+  	stats.begin();
+
+    	mesh.rotation.x += 0.005;
+    	mesh.rotation.y += 0.01;
+
+    	renderer.render( scene, camera );
+
+  	stats.end();
+
+    requestAnimationFrame( animate );
 })();
