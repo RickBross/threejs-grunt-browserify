@@ -11,7 +11,9 @@ A three.js node template with grunt commands!
 
 ###Semantic Versioning
 `grunt bump` for +`0.0.1`
+
 `grunt bump:minor` for +`0.1.0`
+
 `grunt bump:major` for +`1.0.0`
 
 ###Livereload dev environment
