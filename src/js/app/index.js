@@ -1,6 +1,8 @@
 var THREE = require('three');
 var Stats = require('stats.js');
 var stats = new Stats();
+var dat = require('dat-gui');
+var gui = new dat.GUI();
 
 stats.setMode(0); // 0: fps, 1: ms
 document.body.appendChild( stats.domElement );
@@ -28,6 +30,17 @@ THREEx.WindowResize(renderer, camera);
 var geometry	= new THREE.CubeGeometry( 1, 1, 1);
 var material	= new THREE.MeshNormalMaterial();
 var mesh	= new THREE.Mesh( geometry, material );
+mesh.rotation.rate = {
+  x:0.005,
+  y:0.01
+};
+
+var f1 = gui.addFolder('Cube');
+f1.add(mesh.rotation.rate, 'x', 0, 0.05);
+f1.add(mesh.rotation.rate, 'y', 0, 0.05);
+
+f1.open();
+
 scene.add( mesh );
 
 (function animate(){
@@ -35,8 +48,8 @@ scene.add( mesh );
 
   	stats.begin();
 
-    	mesh.rotation.x += 0.005;
-    	mesh.rotation.y += 0.01;
+    	mesh.rotation.x += mesh.rotation.rate.x;
+    	mesh.rotation.y += mesh.rotation.rate.y;
 
     	renderer.render( scene, camera );
 
