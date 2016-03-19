@@ -1,0 +1,29 @@
+{
+  "name": "threejs-node-grunt",
+  "description": "A node boilerplate for Three.js project with grunt commands!",
+  "main": "index.js",
+  "authors": [
+    "Rick Bross"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "threejs",
+    "require",
+    "grunt",
+    "node",
+    "javascript"
+  ],
+  "homepage": "https://github.com/RickBross/threejs-node-grunt",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "src/js/vendor"
+  ],
+  "dependencies": {
+    "threex.windowresize": "*"
+  }
+}

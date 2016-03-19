@@ -1,0 +1,65 @@
+{
+  "name": "threejs-node-grunt",
+  "version": "0.0.1",
+  "description": "A node boilerplate for Three.js project with grunt commands!",
+  "main": "index.js",
+  "dependencies": {
+    "three.js": "^0.73.2"
+  },
+  "devDependencies": {
+    "body-parser": "^1.15.0",
+    "browserify": "^13.0.0",
+    "browserify-shim": "^3.8.12",
+    "debowerify": "^1.4.1",
+    "envify": "^3.4.0",
+    "grunt": "^0.4.5",
+    "grunt-bowercopy": "^1.2.4",
+    "grunt-browserify": "^5.0.0",
+    "grunt-browserify-bower": "^0.1.4",
+    "grunt-bump": "^0.7.0",
+    "grunt-concurrent": "^2.2.1",
+    "grunt-contrib-connect": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-jade": "^1.0.0",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-express-server": "^0.5.2",
+    "grunt-jade": "^0.5.1",
+    "grunt-open": "^0.2.3",
+    "grunt-parallel": "^0.4.1",
+    "jade": "^1.11.0",
+    "lodash": "^4.6.1",
+    "node-markdown": "^0.1.1",
+    "path": "^0.12.7"
+  },
+  "scripts": {
+    "test": "grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rickbross/threejs-node-grunt.git"
+  },
+  "keywords": [
+    "threejs",
+    "require",
+    "grunt",
+    "node",
+    "javascript"
+  ],
+  "author": "Rick Bross",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rickbross/threejs-node-grunt/issues"
+  },
+  "homepage": "https://github.com/rickbross/threejs-node-grunt#readme",
+  "browserify-shim": {
+    "lodash": {
+      "exports": "_"
+    },
+    "Stats": {
+      "exports": "Stats"
+    }
+  }
+}

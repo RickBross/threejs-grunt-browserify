@@ -25,6 +25,14 @@ build/Release
 
 # Dependency directory
 node_modules
+src/js/vendor
+
+# builds
+build
+prototype
+
+# vendor
+.sass-cache
 
 # Optional npm cache directory
 .npm
