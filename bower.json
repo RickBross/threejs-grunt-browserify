@@ -24,6 +24,8 @@
     "src/js/vendor"
   ],
   "dependencies": {
-    "threex.windowresize": "*"
+    "threex.windowresize": "*",
+    "three.js": "^0.75.0",
+    "threex.rendererstats": "https://github.com/jeromeetienne/threex.rendererstats/archive/master.zip"
   }
 }

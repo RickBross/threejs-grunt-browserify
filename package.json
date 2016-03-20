@@ -4,7 +4,6 @@
   "description": "A node boilerplate for Three.js project with grunt commands!",
   "main": "index.js",
   "dependencies": {
-    "three.js": "^0.73.2"
   },
   "devDependencies": {
     "body-parser": "^1.15.0",

@@ -1,4 +1,4 @@
-var THREE = require('three');
+
 var Stats = require('stats.js');
 var stats = new Stats();
 var dat = require('dat-gui');
@@ -11,6 +11,12 @@ stats.domElement.style.top = '0px';
 stats.domElement.style.position = 'absolute';
 
 var renderer = new THREE.WebGLRenderer();
+
+var rendererStats = new THREEx.RendererStats();
+rendererStats.domElement.style.position = 'absolute';
+rendererStats.domElement.style.left = '0px';
+rendererStats.domElement.style.bottom   = '0px';
+document.body.appendChild( rendererStats.domElement );
 
 var size = {
   w: window.innerWidth,
@@ -54,6 +60,7 @@ scene.add( mesh );
     	renderer.render( scene, camera );
 
   	stats.end();
+    rendererStats.update(renderer);
 
     requestAnimationFrame( animate );
 })();

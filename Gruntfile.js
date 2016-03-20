@@ -172,7 +172,9 @@ module.exports = function(grunt) {
       prototype: {
         files: {
           'prototype/js/lib.min.js': [
-            'src/js/vendor/threex.windowresize/threex.windowresize.js'
+            'src/js/vendor/three.js/three.min.js',
+            'src/js/vendor/threex.windowresize/threex.windowresize.js',
+            'src/js/vendor/threex.rendererstats/threex.rendererstats.js',
           ]
         }
       },
