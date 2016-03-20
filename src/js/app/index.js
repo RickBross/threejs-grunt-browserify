@@ -2,65 +2,178 @@
 var Stats = require('stats.js');
 var stats = new Stats();
 var dat = require('dat-gui');
-var gui = new dat.GUI();
+//var gui = new dat.GUI();
+/**
+ * Provides requestAnimationFrame in a cross browser way.
+ * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+ */
 
-stats.setMode(0); // 0: fps, 1: ms
-document.body.appendChild( stats.domElement );
-stats.domElement.style.left = '0px';
-stats.domElement.style.top = '0px';
-stats.domElement.style.position = 'absolute';
+    if ( !window.requestAnimationFrame ) {
 
-var renderer = new THREE.WebGLRenderer();
+    	window.requestAnimationFrame = ( function() {
 
-var rendererStats = new THREEx.RendererStats();
-rendererStats.domElement.style.position = 'absolute';
-rendererStats.domElement.style.left = '0px';
-rendererStats.domElement.style.bottom   = '0px';
-document.body.appendChild( rendererStats.domElement );
+    		return window.webkitRequestAnimationFrame ||
+    		window.mozRequestAnimationFrame ||
+    		window.oRequestAnimationFrame ||
+    		window.msRequestAnimationFrame ||
+    		function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
 
-var size = {
-  w: window.innerWidth,
-  h: window.innerHeight
-};
+    			window.setTimeout( callback, 1000 / 60 );
 
-var renderer	= new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
+    		};
 
-var scene	= new THREE.Scene();
-var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000 );
-camera.position.z = 3;
+    	} )();
 
-THREEx.WindowResize(renderer, camera);
+    }
 
-var geometry	= new THREE.CubeGeometry( 1, 1, 1);
-var material	= new THREE.MeshNormalMaterial();
-var mesh	= new THREE.Mesh( geometry, material );
-mesh.rotation.rate = {
-  x:0.005,
-  y:0.01
-};
+			var KEYCODE_SPACE = 32;
+			var KEYCODE_UP = 38;
+			var KEYCODE_LEFT = 37;
+			var KEYCODE_RIGHT = 39;
+			var KEYCODE_W = 87;
+			var KEYCODE_A = 65;
+			var KEYCODE_D = 68;
+			var camera, scene, renderer, mouse2d, sun, sphere;
+			var lfHeld = false;
+			var rtHeld = false;
 
-var f1 = gui.addFolder('Cube');
-f1.add(mesh.rotation.rate, 'x', 0, 0.05);
-f1.add(mesh.rotation.rate, 'y', 0, 0.05);
+			var range = 400;
+			var speed = 1;
+			var sphereSize = 4;
 
-f1.open();
+			var cubes = [];
+			var vy = 0;
+			var vx = 0;
+			var jumping = false;
+			var inAir = true;
+			var gravity = 0.3;
 
-scene.add( mesh );
+			function init(){
 
-(function animate(){
+				container = document.createElement('div');
+				document.body.appendChild(container);
 
 
-  	stats.begin();
+				camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera.position.set( 300, 120, 0 );
 
-    	mesh.rotation.x += mesh.rotation.rate.x;
-    	mesh.rotation.y += mesh.rotation.rate.y;
+				scene = new THREE.Scene();
 
-    	renderer.render( scene, camera );
+				sphere = new THREE.Mesh( new THREE.SphereGeometry( sphereSize, 10, 10 ), new THREE.MeshLambertMaterial( { color: 0xff0000 } ) );
+				sphere.position.y = 100;
+				scene.add( sphere );
 
-  	stats.end();
-    rendererStats.update(renderer);
+				renderer = new THREE.WebGLRenderer();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				container.appendChild(renderer.domElement);
 
-    requestAnimationFrame( animate );
-})();
+				var ambientLight = new THREE.AmbientLight(0xdddddd);
+				scene.add(ambientLight);
+
+				sun = new THREE.DirectionalLight(0xffffff);
+				sun.position = new THREE.Vector3(1, -1, 1).normalize();
+				scene.add(sun);
+
+				createPlatforms();
+
+				document.onkeydown = handleKeyDown;
+				document.onkeyup = handleKeyUp;
+				animate();
+			}
+
+			function createPlatforms(){
+
+				camera.target=createCube(100, 10, 200, new THREE.Vector3( 0, 0, 0), 0).position;
+				createCube(100, 10, 100, new THREE.Vector3(0, 80, 170), 0);
+				createCube(100, 10, 200, new THREE.Vector3( 0, 160, 0), 0);
+
+			}
+
+			function createCube(sx, sy, sz, p, ry){
+
+				var cube = new THREE.Mesh( new THREE.CubeGeometry( sx, sy, sz ), new THREE.MeshLambertMaterial( { color: 0x003300 } ) );
+				cube.position = p;
+				cube.rotation.y = ry;
+				scene.add(cube);
+
+				THREE.Collisions.colliders.push( THREE.CollisionUtils.MeshOBB(cube) );
+				cubes.push(cube);
+				return cube;
+			}
+
+			function animate() {
+				requestAnimationFrame( animate );
+				camera.position.x = sphere.position.x+400;
+				camera.position.y = sphere.position.y+200;
+				camera.position.z = sphere.position.z+200;
+				vy+=gravity;
+				if (inAir){
+					if (vy>5){
+						vy=5;
+					}
+				}
+				if (lfHeld){
+					vx = 2;
+				}
+				if (rtHeld){
+					vx = -2;
+				}
+				sphere.position.z+=vx;
+				vx=vx*0.8;
+
+				var ray = new THREE.Ray( sphere.position, new THREE.Vector3( 0, -1, 0 ) );
+
+
+				var c = THREE.Collisions.rayCastNearest( ray );
+
+				if ( !c || c.distance > vy+sphereSize ) {
+					sphere.position.y -= vy;
+					inAir = true;
+				}else{
+					inAir = false;
+					vy=0; 		// switch gravity off
+					jumping = false;
+				}
+
+				if (inAir === false && c.distance < sphereSize){
+					sphere.position.y+=1;
+				}
+
+
+				camera.lookAt( camera.target );
+
+				renderer.render( scene, camera );
+
+			}
+
+			function jump(){
+				if (jumping === false){
+					sphere.position.y += 5;
+					vy = -8;
+					jumping = true;
+				}
+			}
+
+			function handleKeyDown(e) {
+				if(!e){ e = window.event; }
+				switch(e.keyCode) {
+					case KEYCODE_A:
+					case KEYCODE_LEFT:	lfHeld = true; break;
+					case KEYCODE_D:
+					case KEYCODE_RIGHT: rtHeld = true; break;
+					case KEYCODE_W:
+					case KEYCODE_UP:	jump(); break;
+				}
+			}
+
+			function handleKeyUp(e) {
+			if(!e){ e = window.event; }
+				switch(e.keyCode) {
+					case KEYCODE_A:
+					case KEYCODE_LEFT:	lfHeld = false; break;
+					case KEYCODE_D:
+					case KEYCODE_RIGHT: rtHeld = false; break;
+				}
+			}
+
+init();

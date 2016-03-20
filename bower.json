@@ -26,6 +26,7 @@
   "dependencies": {
     "threex.windowresize": "*",
     "three.js": "^0.75.0",
-    "threex.rendererstats": "https://github.com/jeromeetienne/threex.rendererstats/archive/master.zip"
+    "threex.rendererstats": "https://github.com/jeromeetienne/threex.rendererstats/archive/master.zip",
+    "threex.colliders": "*"
   }
 }

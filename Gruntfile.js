@@ -175,6 +175,7 @@ module.exports = function(grunt) {
             'src/js/vendor/three.js/three.min.js',
             'src/js/vendor/threex.windowresize/threex.windowresize.js',
             'src/js/vendor/threex.rendererstats/threex.rendererstats.js',
+            'src/js/vendor/threex.colliders/threex.collider.js'
           ]
         }
       },
